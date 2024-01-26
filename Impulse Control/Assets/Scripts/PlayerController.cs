@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     public int frame_rate;
     public float mouse_sens;
-    public enum crouchModes {TOGGLE, HOLD};
+    public enum crouchModes { TOGGLE, HOLD };
     public crouchModes crouch_mode = crouchModes.TOGGLE;
 
     public float movement_speed; // 800
@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     float sprinting_cam_fov = 65;
 
     public Vector3 velocity;
-    Collider playerCollider;
+    Collider collider;
     Rigidbody rb;
     GameObject cam;
 
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
         // lock cursor to center of screen
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
-        playerCollider = gameObject.GetComponent<CapsuleCollider>();
+        collider = gameObject.GetComponent<CapsuleCollider>();
         rb = gameObject.GetComponent<Rigidbody>();
         cam = gameObject.transform.GetChild(0).gameObject;
     }
@@ -85,32 +85,36 @@ public class PlayerController : MonoBehaviour
     void updatePlayerStates()
     {
         // if there is collision below player, grounded is true
-        grounded = (Physics.CheckCapsule(
-                        transform.position - new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) + transform.forward * .35f,
-                        transform.position - new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) - transform.forward * .35f,
-                        0.05f) ||
-                    Physics.CheckCapsule(
-                        transform.position - new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) + transform.right * .35f,
-                        transform.position - new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) - transform.right * .35f,
-                        0.05f));
+
+        // old capsule-based grounded collision check
+        /* grounded = (Physics.CheckCapsule(
+                            transform.position - new Vector3(0, collider.bounds.extents.y + 0.055f, 0) + transform.forward * .35f,
+                            transform.position - new Vector3(0, collider.bounds.extents.y + 0.055f, 0) - transform.forward * .35f,
+                            0.05f) ||
+                        Physics.CheckCapsule(
+                            transform.position - new Vector3(0, collider.bounds.extents.y + 0.055f, 0) + transform.right * .35f,
+                            transform.position - new Vector3(0, collider.bounds.extents.y + 0.055f, 0) - transform.right * .35f,
+                            0.05f));*/
+
+        grounded = Physics.Raycast(transform.position, -Vector3.up, collider.bounds.extents.y + 0.1f);
 
         // if player is crouching, check headroom for being able to uncrouch
         if (crouching)
         {
             has_headroom = (!Physics.CheckSphere(
-                        transform.position + new Vector3(0, playerCollider.bounds.extents.y + 0.055f + default_player_scale.y / 2, 0),
+                        transform.position + new Vector3(0, collider.bounds.extents.y + 0.055f + default_player_scale.y / 2, 0),
                         default_player_scale.y / 2));
         }
         // if player isn't crouching, check if there is any headroom at all above player
         else
         {
             has_headroom = (!Physics.CheckCapsule(
-                            transform.position + new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) + transform.forward * .35f,
-                            transform.position + new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) - transform.forward * .35f,
+                            transform.position + new Vector3(0, collider.bounds.extents.y + 0.055f, 0) + transform.forward * .35f,
+                            transform.position + new Vector3(0, collider.bounds.extents.y + 0.055f, 0) - transform.forward * .35f,
                             0.05f) ||
                         !Physics.CheckCapsule(
-                            transform.position + new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) + transform.right * .35f,
-                            transform.position + new Vector3(0, playerCollider.bounds.extents.y + 0.055f, 0) - transform.right * .35f,
+                            transform.position + new Vector3(0, collider.bounds.extents.y + 0.055f, 0) + transform.right * .35f,
+                            transform.position + new Vector3(0, collider.bounds.extents.y + 0.055f, 0) - transform.right * .35f,
                             0.05f));
         }
 
@@ -139,7 +143,8 @@ public class PlayerController : MonoBehaviour
 
         // set crouch toggle
 
-        if (crouch_mode == crouchModes.TOGGLE) {
+        if (crouch_mode == crouchModes.TOGGLE)
+        {
             if (Input.GetKeyDown(KeyCode.LeftControl) && !crouch_toggle)
             {
                 crouch_toggle = true;
@@ -149,7 +154,8 @@ public class PlayerController : MonoBehaviour
                 crouch_toggle = false;
             }
         }
-        else if (crouch_mode == crouchModes.HOLD) {
+        else if (crouch_mode == crouchModes.HOLD)
+        {
             crouch_toggle = Input.GetKey(KeyCode.LeftControl);
         }
 
@@ -171,10 +177,6 @@ public class PlayerController : MonoBehaviour
         {
             crouching = false;
         }
-
-
-
-
 
     }
 
@@ -244,7 +246,7 @@ public class PlayerController : MonoBehaviour
             vector *= jump_modifier;
         }
 
-        // DBUG display speed 
+        // DBUG display speed
         //Debug.Log("V: " + rb.velocity + " || " + rb.velocity.magnitude);
         rb.AddForce(vector, ForceMode.Force);
 
@@ -255,7 +257,46 @@ public class PlayerController : MonoBehaviour
         }
 
         gameObject.transform.Rotate(new Vector3(0, hor_curs_inp * mouse_sens, 0), Space.World);
-        cam.transform.Rotate(new Vector3(-ver_curs_inp * mouse_sens, 0, 0), Space.Self);
+        updateCamera();
+
     }
 
+    void updateCamera()
+    {
+        Vector3 cameraRotation = new Vector3(
+                -ver_curs_inp * mouse_sens,
+                0,
+                0
+                );
+        cameraRotation = cam.transform.localEulerAngles + cameraRotation;
+        cameraRotation = new Vector3(
+            Mathf.Clamp(toNegativeDegrees(cameraRotation.x), -90, 90),
+            cameraRotation.y,
+            cameraRotation.z
+            );
+        cam.transform.localEulerAngles = cameraRotation;
+    }
+
+    // reused self-made code from Junior year project Super Michael Ball
+    // unity likes to use degrees in the range 0 to 360. this function will try and return a range of -180 to 180.
+    // there is a flaw in unity however that makes the x axis, and ONLY the x axis not cooperate past 90 degrees. it is very weird.
+    // if it MUST be fixed, then we can start storing the x axis rotation in this script rather than using requesting unitys.
+    float toNegativeDegrees(float degree)
+    {
+        degree /= 360;
+        if (degree > 0.5) { degree -= 1; }
+        degree *= 360;
+        return degree;
+    }
+
+    public bool isPlayerLooking(GameObject objectToLookAt) // returns true if the player is close enough to and is looking at the given object
+    {
+        RaycastHit hit; // if i'm close, & a raycast from the player hit the the object to look at, return true
+        if ((transform.position - objectToLookAt.transform.position).magnitude < 3 && Physics.Raycast(transform.GetChild(0).transform.position, transform.GetChild(0).transform.TransformDirection(Vector3.forward), out hit) && hit.transform == objectToLookAt.transform)
+        {
+            //Debug.Log(player.transform.GetChild(0).transform.TransformDirection(Vector3.forward));
+            return true;
+        }
+        return false;
+    }
 }
