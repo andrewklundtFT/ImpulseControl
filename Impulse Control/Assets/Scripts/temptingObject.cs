@@ -11,7 +11,7 @@ public class temptingObject : MonoBehaviour
     public string actionName;
     public TMPro.TextMeshProUGUI hoveringText;
     private GameObject highlight;
-    private static Color rainbow = new Color(0, 1, 0, .5f);
+    private static Color rainbow = new Color(1, 0, 1, .5f);
 
     void Start()
     {
@@ -21,13 +21,14 @@ public class temptingObject : MonoBehaviour
         Destroy(highlight.GetComponent<Collider>());
         highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
         highlight.GetComponent<Renderer>().material = highlightMaterial;
+        StartCoroutine(rainbowProgression());
     }
 
     void Update()
     {  
         devisualizeTemptation();
         highlight.gameObject.SetActive(false); // highlight is inactive by default
-        if (player.GetComponent<PlayerController>().isPlayerLooking(this.gameObject)) //if player is close enough and looking, set the highlight active
+        if (GameObject.ReferenceEquals(player.GetComponent<PlayerController>().lookingAt(3), this.gameObject)) //if player is close enough and looking, set the highlight active
         {
             visualizeTemptation();
         }
@@ -38,11 +39,9 @@ public class temptingObject : MonoBehaviour
         highlight.gameObject.SetActive(true);
         hoveringText.text = "'E' " + actionName;
 
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("HURRAY!");
-            colorChanger();
         }
     }
 
@@ -52,8 +51,28 @@ public class temptingObject : MonoBehaviour
         hoveringText.text = "";
     }
 
-    public void colorChanger ()
+    public IEnumerator rainbowProgression()
     {
-        highlightMaterial.SetColor("_Color", rainbow);
+        while (true)
+        {
+            if (rainbow.r == 1f && rainbow.g < 1f)
+            {
+                rainbow.b = Mathf.Clamp(rainbow.b - 0.01f, 0, 1);
+                rainbow.g = Mathf.Clamp(rainbow.g + 0.01f, 0, 1);
+            }
+            if (rainbow.g == 1f && rainbow.b < 1f)
+            {
+                rainbow.r = Mathf.Clamp(rainbow.r - 0.01f, 0, 1);
+                rainbow.b = Mathf.Clamp(rainbow.b + 0.01f, 0, 1);
+            }
+            if (rainbow.b == 1f && rainbow.r < 1f)
+            {
+                rainbow.g = Mathf.Clamp(rainbow.g - 0.01f, 0, 1);
+                rainbow.r = Mathf.Clamp(rainbow.r + 0.01f, 0, 1);
+            }
+            highlightMaterial.SetColor("_Color", rainbow);
+            hoveringText.color = rainbow;
+            yield return new WaitForSeconds(0.005f);
+        }
     }
 }
