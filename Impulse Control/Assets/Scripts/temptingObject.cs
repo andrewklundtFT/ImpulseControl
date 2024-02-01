@@ -10,6 +10,8 @@ public class temptingObject : MonoBehaviour
     public Material highlightMaterial;
     public string actionName;
     public TMPro.TextMeshProUGUI hoveringText;
+    public GameObject spotlightPrefab;
+    private GameObject spotlight;
     private GameObject highlight;
     private static Color rainbow = new Color(1, 0, 1, .5f);
 
@@ -22,6 +24,7 @@ public class temptingObject : MonoBehaviour
         highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
         highlight.GetComponent<Renderer>().material = highlightMaterial;
         StartCoroutine(rainbowProgression());
+        Instantiate(spotlightPrefab, transform, true);
     }
 
     void Update()
