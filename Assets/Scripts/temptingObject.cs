@@ -24,7 +24,8 @@ public class temptingObject : MonoBehaviour
         highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
         highlight.GetComponent<Renderer>().material = highlightMaterial;
         StartCoroutine(rainbowProgression());
-        Instantiate(spotlightPrefab, transform, true);
+        spotlight = Instantiate(spotlightPrefab, transform, true);
+        spotlight.GetComponent<SpotlightController>().center = this.gameObject;
     }
 
     void Update()
@@ -39,6 +40,7 @@ public class temptingObject : MonoBehaviour
 
     public void visualizeTemptation ()
     {
+        spotlight.SetActive(true);
         highlight.gameObject.SetActive(true);
         hoveringText.text = "'E' " + actionName;
 

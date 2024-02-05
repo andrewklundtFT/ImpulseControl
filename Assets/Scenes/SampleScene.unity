@@ -237,7 +237,7 @@ MonoBehaviour:
   highlightMaterial: {fileID: 2100000, guid: 1c25c73dce42b7542a070e33f10d8b28, type: 2}
   actionName: STROKE
   hoveringText: {fileID: 314305773}
-  spotlightPrefab: {fileID: 0}
+  spotlightPrefab: {fileID: 1031049788590755069, guid: e0a72de9da1ffe6478839c423b6c2f3b, type: 3}
 --- !u!1 &314305771
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,11 +5,42 @@ using UnityEngine;
 public class SpotlightController : MonoBehaviour
 {
     public GameObject center;
+    public Material coneMaterial;
+    private Color rainbow = new Color(1, 0, 1, 0.9f);
 
-    // Update is called once per frame
+    private void Start()
+    {
+        transform.position = center.transform.position + new Vector3(0, 1.5f, 2.5f);
+        StartCoroutine(rainbowProgression());
+    }
     void Update()
     {
         transform.RotateAround(center.transform.position, Vector3.up, 100 * Time.deltaTime);
         transform.LookAt(center.transform.position);
+    }
+
+    public IEnumerator rainbowProgression()
+    {
+        while (true)
+        {
+            if (rainbow.r == 1f && rainbow.g < 1f)
+            {
+                rainbow.b = Mathf.Clamp(rainbow.b - 0.01f, 0, 1);
+                rainbow.g = Mathf.Clamp(rainbow.g + 0.01f, 0, 1);
+            }
+            if (rainbow.g == 1f && rainbow.b < 1f)
+            {
+                rainbow.r = Mathf.Clamp(rainbow.r - 0.01f, 0, 1);
+                rainbow.b = Mathf.Clamp(rainbow.b + 0.01f, 0, 1);
+            }
+            if (rainbow.b == 1f && rainbow.r < 1f)
+            {
+                rainbow.g = Mathf.Clamp(rainbow.g - 0.01f, 0, 1);
+                rainbow.r = Mathf.Clamp(rainbow.r + 0.01f, 0, 1);
+            }
+            coneMaterial.EnableKeyword("_EMISSION");
+            coneMaterial.SetColor("_EmissionColor", rainbow);
+            yield return new WaitForSeconds(0.005f);
+        }
     }
 }
