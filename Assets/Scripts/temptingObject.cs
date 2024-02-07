@@ -41,6 +41,10 @@ public class temptingObject : MonoBehaviour
     public void visualizeTemptation ()
     {
         spotlight.SetActive(true);
+        foreach (Renderer renderer in spotlight.GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = true;
+        }
         highlight.gameObject.SetActive(true);
         hoveringText.text = "'E' " + actionName;
 
@@ -52,6 +56,10 @@ public class temptingObject : MonoBehaviour
 
     public void devisualizeTemptation()
     {
+        foreach (Renderer renderer in spotlight.GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = false;
+        }
         highlight.gameObject.SetActive(false);
         hoveringText.text = "";
     }
