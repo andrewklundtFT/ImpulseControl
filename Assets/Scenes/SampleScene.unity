@@ -287,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f15a06533b0c164c98a010153676da2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.226
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 0f15a06533b0c164c98a010153676da2, type: 3}
       propertyPath: m_LocalPosition.z
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1702061444}
   highlightMaterial: {fileID: 2100000, guid: 1c25c73dce42b7542a070e33f10d8b28, type: 2}
-  actionName: STROKE
+  actionName: PICK UP
   hoveringText: {fileID: 314305773}
   spotlightPrefab: {fileID: 1031049788590755069, guid: e0a72de9da1ffe6478839c423b6c2f3b, type: 3}
 --- !u!65 &820246720

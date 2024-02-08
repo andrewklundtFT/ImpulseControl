@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class SpotlightController : MonoBehaviour
 {
-    public GameObject center;
+    public Vector3 center;
     public Material coneMaterial;
     private Color rainbow = new Color(1, 0, 1, 0.9f);
 
     private void Start()
     {
-        transform.position = center.transform.position + new Vector3(0, 1.5f, 2.5f);
+        transform.position = center + new Vector3(0, 1.5f, 2.5f);
         StartCoroutine(rainbowProgression());
     }
     void Update()
     {
-        transform.RotateAround(center.transform.position, Vector3.up, 100 * Time.deltaTime);
-        transform.LookAt(center.transform.position);
+        transform.RotateAround(center, Vector3.up, 100 * Time.deltaTime);
+        transform.LookAt(center);
     }
 
     public IEnumerator rainbowProgression()

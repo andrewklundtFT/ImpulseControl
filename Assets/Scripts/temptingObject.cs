@@ -25,14 +25,14 @@ public class temptingObject : MonoBehaviour
         highlight.GetComponent<Renderer>().material = highlightMaterial;
         StartCoroutine(rainbowProgression());
         spotlight = Instantiate(spotlightPrefab, transform, true);
-        spotlight.GetComponent<SpotlightController>().center = this.gameObject;
+        spotlight.GetComponent<SpotlightController>().center = transform.position;
     }
 
     void Update()
     {  
         devisualizeTemptation();
         highlight.gameObject.SetActive(false); // highlight is inactive by default
-        if (GameObject.ReferenceEquals(player.GetComponent<PlayerController>().lookingAt(3), this.gameObject)) //if player is close enough and looking, set the highlight active
+        if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
         {
             visualizeTemptation();
         }
@@ -45,6 +45,7 @@ public class temptingObject : MonoBehaviour
         {
             renderer.enabled = true;
         }
+        spotlight.transform.GetChild(1).gameObject.SetActive(true);
         highlight.gameObject.SetActive(true);
         hoveringText.text = "'E' " + actionName;
 
@@ -60,6 +61,7 @@ public class temptingObject : MonoBehaviour
         {
             renderer.enabled = false;
         }
+        spotlight.transform.GetChild(1).gameObject.SetActive(false);
         highlight.gameObject.SetActive(false);
         hoveringText.text = "";
     }
