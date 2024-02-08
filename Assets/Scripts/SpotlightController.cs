@@ -10,12 +10,12 @@ public class SpotlightController : MonoBehaviour
 
     private void Start()
     {
-        transform.position = center + new Vector3(0, 1.5f, 2.5f);
+        transform.position = center + new Vector3(0, 2.5f, 2.5f);
         StartCoroutine(rainbowProgression());
     }
     void Update()
     {
-        transform.RotateAround(center, Vector3.up, 100 * Time.deltaTime);
+        transform.RotateAround(center, Vector3.up, 150 * Time.deltaTime);
         transform.LookAt(center);
     }
 
