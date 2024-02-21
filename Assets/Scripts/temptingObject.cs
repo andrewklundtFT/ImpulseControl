@@ -46,6 +46,7 @@ public class temptingObject : MonoBehaviour
             renderer.enabled = true;
         }
         spotlight.transform.GetChild(1).gameObject.SetActive(true);
+        spotlight.transform.GetChild(2).gameObject.SetActive(true);
         highlight.gameObject.SetActive(true);
         hoveringText.text = "'E' " + actionName;
 
@@ -62,6 +63,7 @@ public class temptingObject : MonoBehaviour
             renderer.enabled = false;
         }
         spotlight.transform.GetChild(1).gameObject.SetActive(false);
+        spotlight.transform.GetChild(2).gameObject.SetActive(false);
         highlight.gameObject.SetActive(false);
         hoveringText.text = "";
     }
