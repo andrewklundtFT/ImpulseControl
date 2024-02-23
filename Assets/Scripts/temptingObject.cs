@@ -52,6 +52,7 @@ public class temptingObject : MonoBehaviour
 
     public void visualizeTemptation()
     {
+        RenderSettings.ambientLight = new Color(0.188235294f, 0.11372549f, 0);
         spotlight.SetActive(true);
         foreach (Renderer renderer in spotlight.GetComponentsInChildren<Renderer>())
         {
@@ -65,11 +66,13 @@ public class temptingObject : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             Debug.Log("HURRAY!");
+            Debug.Log(RenderSettings.ambientLight);
         }
     }
 
     public void devisualizeTemptation()
     {
+        RenderSettings.ambientLight = Color.white;
         foreach (Renderer renderer in spotlight.GetComponentsInChildren<Renderer>())
         {
             renderer.enabled = false;
