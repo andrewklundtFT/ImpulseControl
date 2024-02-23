@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class temptingObject : MonoBehaviour
@@ -8,6 +9,8 @@ public class temptingObject : MonoBehaviour
 
     public string actionName;
     public AudioSource sunshineSource;
+    public bool weirdObject = false;
+    public float objectHeight;
     public Material highlightMaterial;
     public TMPro.TextMeshProUGUI hoveringText;
     public GameObject spotlightPrefab;
@@ -20,21 +23,27 @@ public class temptingObject : MonoBehaviour
     private void Start()
     {
         // creating the highlight object that is basically this object with no scripts or collider with a transparent texture on it
-        highlight = Instantiate(gameObject, transform, true);
-        Destroy(highlight.GetComponent<temptingObject>());
-        Destroy(highlight.GetComponent<Collider>());
-        highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-        highlight.GetComponent<Renderer>().material = highlightMaterial;
+        if (!weirdObject)
+        {
+            highlight = Instantiate(gameObject, transform, true);
+            Destroy(highlight.GetComponent<temptingObject>());
+            Destroy(highlight.GetComponent<Collider>());
+            highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            highlight.GetComponent<Renderer>().material = highlightMaterial;
+        }
         StartCoroutine(rainbowProgression());
         spotlight = Instantiate(spotlightPrefab, transform, true);
-        spotlight.GetComponent<SpotlightController>().center = transform.position;
+        spotlight.GetComponent<SpotlightController>().center = transform.position + new Vector3(0, objectHeight, 0);
     }
 
     private void Update()
     {
         devisualizeTemptation();
-        highlight.gameObject.SetActive(false); // highlight is inactive by default
-        if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
+        if (!weirdObject)
+        {
+            highlight.gameObject.SetActive(false); // highlight is inactive by default
+        }
+            if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
         {
             visualizeTemptation();
             if (sunshinePlaying == false)
@@ -60,7 +69,10 @@ public class temptingObject : MonoBehaviour
         }
         spotlight.transform.GetChild(1).gameObject.SetActive(true);
         spotlight.transform.GetChild(2).gameObject.SetActive(true);
-        highlight.gameObject.SetActive(true);
+        if (!weirdObject)
+        {
+            highlight.gameObject.SetActive(true);
+        }
         hoveringText.text = "'E' " + actionName;
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -79,7 +91,10 @@ public class temptingObject : MonoBehaviour
         }
         spotlight.transform.GetChild(1).gameObject.SetActive(false);
         spotlight.transform.GetChild(2).gameObject.SetActive(false);
-        highlight.gameObject.SetActive(false);
+        if (!weirdObject)
+        {
+            highlight.gameObject.SetActive(false);
+        }
         hoveringText.text = "";
     }
 
