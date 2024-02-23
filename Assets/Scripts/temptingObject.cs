@@ -1,24 +1,26 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class temptingObject : MonoBehaviour
 {
     // initializing variables for the player, highlight material, and a gameobject that will be the highlight
     public GameObject player;
-    public Material highlightMaterial;
+
     public string actionName;
+    public AudioSource sunshineSource;
+    public Material highlightMaterial;
     public TMPro.TextMeshProUGUI hoveringText;
     public GameObject spotlightPrefab;
+    private AudioSource walkingOnSunshine;
+    private bool sunshinePlaying = false;
     private GameObject spotlight;
     private GameObject highlight;
     private static Color rainbow = new Color(1, 0, 1, .5f);
 
-    void Start()
+    private void Start()
     {
         // creating the highlight object that is basically this object with no scripts or collider with a transparent texture on it
-        highlight = Instantiate(gameObject, transform, true); 
+        highlight = Instantiate(gameObject, transform, true);
         Destroy(highlight.GetComponent<temptingObject>());
         Destroy(highlight.GetComponent<Collider>());
         highlight.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
@@ -28,17 +30,27 @@ public class temptingObject : MonoBehaviour
         spotlight.GetComponent<SpotlightController>().center = transform.position;
     }
 
-    void Update()
-    {  
+    private void Update()
+    {
         devisualizeTemptation();
         highlight.gameObject.SetActive(false); // highlight is inactive by default
         if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
         {
             visualizeTemptation();
+            if (sunshinePlaying == false)
+            {
+                walkingOnSunshine = Instantiate(sunshineSource, transform, true);
+                sunshinePlaying = true;
+            }
+        }
+        else
+        {
+            Destroy(walkingOnSunshine);
+            sunshinePlaying = false;
         }
     }
 
-    public void visualizeTemptation ()
+    public void visualizeTemptation()
     {
         spotlight.SetActive(true);
         foreach (Renderer renderer in spotlight.GetComponentsInChildren<Renderer>())
@@ -68,7 +80,7 @@ public class temptingObject : MonoBehaviour
         hoveringText.text = "";
     }
 
-    public IEnumerator rainbowProgression()
+        public IEnumerator rainbowProgression()
     {
         while (true)
         {

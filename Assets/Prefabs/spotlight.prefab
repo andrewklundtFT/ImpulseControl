@@ -195,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   center: {x: 0, y: 0, z: 0}
   coneMaterial: {fileID: 2100000, guid: b0611a7a327c8da44a7f1c7440ec3918, type: 2}
+  walkingOnSunshine: {fileID: 8300000, guid: 42ddfb0a9e536a7408f7171a3c53bceb, type: 3}
 --- !u!1 &7518737652242196843
 GameObject:
   m_ObjectHideFlags: 0

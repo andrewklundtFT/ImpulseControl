@@ -1,20 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Timeline;
-using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
     // WRITTEN BY GRAYSON SMALLWOOD
     public int frame_rate;
+
     public float mouse_sens;
-    public enum crouchModes {TOGGLE, HOLD};
+
+    public enum crouchModes
+    { TOGGLE, HOLD };
+
     public crouchModes crouch_mode = crouchModes.TOGGLE;
 
     public float movement_speed; // 800
@@ -23,20 +19,22 @@ public class PlayerController : MonoBehaviour
 
     // factors influencing movement_speed
     public float sprint_modifier; // 1.4
+
     public float jump_modifier; // 0.07
     public float crouch_modifier; //0.5
-
 
     public float stamina; // 100
 
     // input
-    float hor_inp;
-    float ver_inp;
+    private float hor_inp;
+
+    private float ver_inp;
     public float hor_curs_inp;
     public float ver_curs_inp;
 
     // player states
     public bool can_move;
+
     public bool grounded;
     public bool has_headroom;
     public bool moving;
@@ -45,20 +43,19 @@ public class PlayerController : MonoBehaviour
     public bool crouching;
 
     // other
-    Vector3 default_player_scale = Vector3.one;
-    Vector3 default_cam_pos = new Vector3(0, 0.6f, 0);
-    Vector3 crouching_player_scale = new Vector3(1, 0.5f, 1);
-    Vector3 crouching_cam_pos = new Vector3(0, 0.2f, 0);
-    float default_cam_fov = 60;
-    float sprinting_cam_fov = 65;
+    private Vector3 default_player_scale = Vector3.one;
+
+    private Vector3 default_cam_pos = new Vector3(0, 0.6f, 0);
+    private Vector3 crouching_player_scale = new Vector3(1, 0.5f, 1);
+    private Vector3 crouching_cam_pos = new Vector3(0, 0.2f, 0);
 
     public Vector3 velocity;
-    Collider player_collider;
-    Rigidbody rb;
+    private Collider player_collider;
+    private Rigidbody rb;
     public GameObject cam;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // lock cursor to center of screen
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
@@ -69,7 +66,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         Application.targetFrameRate = frame_rate;
         updateXYInput();
@@ -77,10 +74,10 @@ public class PlayerController : MonoBehaviour
         {
             calculateMovement();
         }
-        else {
+        else
+        {
             rb.velocity = Vector3.zero;
         }
-
     }
 
     private void OnDrawGizmos()
@@ -88,7 +85,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(cam.transform.position, cam.transform.position + cam.transform.forward * 3);
     }
 
-    void updateXYInput()
+    private void updateXYInput()
     {
         hor_inp = Input.GetAxisRaw("Horizontal");
         ver_inp = Input.GetAxisRaw("Vertical");
@@ -96,7 +93,7 @@ public class PlayerController : MonoBehaviour
         ver_curs_inp = Input.GetAxisRaw("Mouse Y") * mouse_sens;
     }
 
-    void updatePlayerStates()
+    private void updatePlayerStates()
     {
         // if there is collision below player, grounded is true
 
@@ -135,19 +132,11 @@ public class PlayerController : MonoBehaviour
         // if left shift is held and player isn't crouching, sprinting is true
         sprinting = (Input.GetKey(KeyCode.LeftShift) && (!crouching));
 
-        // if sprinting is true and player is moving, change camera fov
-        if (sprinting && moving)
-        {
-            cam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(cam.GetComponent<Camera>().fieldOfView, sprinting_cam_fov, Time.deltaTime * 6.56f);
-        }
-        else
-        {
-            cam.GetComponent<Camera>().fieldOfView = Mathf.Lerp(cam.GetComponent<Camera>().fieldOfView, default_cam_fov, Time.deltaTime * 6.56f);
-        }
 
         // set crouch toggle
 
-        if (crouch_mode == crouchModes.TOGGLE) {
+        if (crouch_mode == crouchModes.TOGGLE)
+        {
             if (Input.GetKeyDown(KeyCode.LeftControl) && !crouch_toggle)
             {
                 crouch_toggle = true;
@@ -157,7 +146,8 @@ public class PlayerController : MonoBehaviour
                 crouch_toggle = false;
             }
         }
-        else if (crouch_mode == crouchModes.HOLD) {
+        else if (crouch_mode == crouchModes.HOLD)
+        {
             crouch_toggle = Input.GetKey(KeyCode.LeftControl);
         }
 
@@ -181,7 +171,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    IEnumerator crouch()
+    private IEnumerator crouch()
     {
         crouching = true;
         // "source engine"-type jump
@@ -213,10 +203,9 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    void calculateMovement()
+    private void calculateMovement()
     {
         updatePlayerStates();
-
 
         // create flat movement vector with a magnitude of one based on player input
         Vector3 vector;
@@ -233,7 +222,6 @@ public class PlayerController : MonoBehaviour
 
         if (crouching)
         {
-
             vector *= crouch_modifier;
         }
 
@@ -247,10 +235,9 @@ public class PlayerController : MonoBehaviour
             vector *= jump_modifier;
         }
 
-        // DBUG display speed 
+        // DBUG display speed
         //Debug.Log("V: " + rb.velocity + " || " + rb.velocity.magnitude);
         rb.AddForce(vector * Time.deltaTime * 120, ForceMode.Force);
-
 
         if (Input.GetKeyDown(KeyCode.Space) && grounded && !crouching)
         {
@@ -259,10 +246,10 @@ public class PlayerController : MonoBehaviour
 
         gameObject.transform.Rotate(new Vector3(0, hor_curs_inp, 0), Space.World);
         updateCamera();
-
     }
 
-    void updateCamera() {
+    private void updateCamera()
+    {
         Vector3 cameraRotation = new Vector3(
                 -ver_curs_inp,
                 0,
@@ -281,7 +268,7 @@ public class PlayerController : MonoBehaviour
     // unity likes to use degrees in the range 0 to 360. this function will try and return a range of -180 to 180.
     // there is a flaw in unity however that makes the x axis, and ONLY the x axis not cooperate past 90 degrees. it is very weird.
     // if it MUST be fixed, then we can start storing the x axis rotation in this script rather than using requesting unitys.
-    float toNegativeDegrees(float degree)
+    private float toNegativeDegrees(float degree)
     {
         degree /= 360;
         if (degree > 0.5) { degree -= 1; }

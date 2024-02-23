@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpotlightController : MonoBehaviour
@@ -13,7 +12,8 @@ public class SpotlightController : MonoBehaviour
         transform.position = center + new Vector3(0, 2.5f, 2.5f);
         StartCoroutine(rainbowProgression());
     }
-    void Update()
+
+    private void Update()
     {
         transform.RotateAround(center, Vector3.up, 150 * Time.deltaTime);
         transform.LookAt(center);
