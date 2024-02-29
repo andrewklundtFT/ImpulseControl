@@ -15,7 +15,7 @@ public class slowlyLookAtPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Quaternion rotation = Quaternion.LookRotation(player.transform.position - transform.position + new Vector3(0, 0.5f, 0), Vector3.up);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, speed * Time.deltaTime);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(player.transform.position + new Vector3(0, 0.5f, 0) - transform.position), 0.2f * Time.deltaTime);
     }
 }

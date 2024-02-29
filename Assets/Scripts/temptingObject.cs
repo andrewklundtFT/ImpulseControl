@@ -16,6 +16,7 @@ public class temptingObject : MonoBehaviour
     public GameObject spotlightPrefab;
     private AudioSource walkingOnSunshine;
     private bool sunshinePlaying = false;
+    public bool loss = false;
     private GameObject spotlight;
     private GameObject highlight;
     private static Color rainbow = new Color(1, 0, 1, .5f);
@@ -34,28 +35,45 @@ public class temptingObject : MonoBehaviour
         StartCoroutine(rainbowProgression());
         spotlight = Instantiate(spotlightPrefab, transform, true);
         spotlight.GetComponent<SpotlightController>().center = transform.position + new Vector3(0, objectHeight, 0);
+        devisualizeTemptation();
     }
 
     private void Update()
     {
-        devisualizeTemptation();
-        if (!weirdObject)
+        if (Vector3.Distance(transform.position, player.transform.position) <= 5 && !loss)
         {
-            highlight.gameObject.SetActive(false); // highlight is inactive by default
-        }
-            if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
-        {
-            visualizeTemptation();
-            if (sunshinePlaying == false)
+            devisualizeTemptation();
+            if (!weirdObject)
             {
-                walkingOnSunshine = Instantiate(sunshineSource, transform, true);
-                sunshinePlaying = true;
+                highlight.gameObject.SetActive(false); // highlight is inactive by default
             }
-        }
-        else
+            if (Vector3.Distance(transform.position, player.transform.position) <= 3) //if player is close enough and looking, set the highlight active
+            {
+                visualizeTemptation();
+                if (sunshinePlaying == false)
+                {
+                    walkingOnSunshine = Instantiate(sunshineSource, transform, true);
+                    sunshinePlaying = true;
+                }
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    loss = true;
+                    Debug.Log("HURRAY!");
+                }
+            }
+            else
+            {
+                Destroy(walkingOnSunshine);
+                sunshinePlaying = false;
+            }
+        } else if (loss)
         {
+            player.GetComponent<PlayerController>().can_move = false;
+            devisualizeTemptation();
             Destroy(walkingOnSunshine);
             sunshinePlaying = false;
+            RenderSettings.ambientLight = Color.red;
         }
     }
 
@@ -74,12 +92,6 @@ public class temptingObject : MonoBehaviour
             highlight.gameObject.SetActive(true);
         }
         hoveringText.text = "'E' " + actionName;
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            Debug.Log("HURRAY!");
-            Debug.Log(RenderSettings.ambientLight);
-        }
     }
 
     public void devisualizeTemptation()

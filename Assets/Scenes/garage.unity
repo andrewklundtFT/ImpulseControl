@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.1469472, g: 0.19219247, b: 0.49865472, a: 1}
+  m_IndirectSpecularColor: {r: 0.14698341, g: 0.19223532, b: 0.4986625, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -780,6 +780,8 @@ MonoBehaviour:
   player: {fileID: 1702061444}
   actionName: PICK UP USB
   sunshineSource: {fileID: 8892524448900910698, guid: 0597ff84eee98a446b30b48cfdafdfdd, type: 3}
+  weirdObject: 0
+  objectHeight: 0
   highlightMaterial: {fileID: 2100000, guid: 1c25c73dce42b7542a070e33f10d8b28, type: 2}
   hoveringText: {fileID: 314305773}
   spotlightPrefab: {fileID: 1031049788590755069, guid: e0a72de9da1ffe6478839c423b6c2f3b, type: 3}

@@ -7,6 +7,7 @@ public class lookAtPlayer : MonoBehaviour
 {
 
     public GameObject player;
+    public float offset = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +17,6 @@ public class lookAtPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(player.transform.position + new Vector3(0, 0.5f, 0));
+        transform.LookAt(player.transform.position + new Vector3(0, offset, 0));
     }
 }
