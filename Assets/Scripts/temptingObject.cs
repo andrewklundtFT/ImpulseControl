@@ -60,7 +60,7 @@ public class temptingObject : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     loss = true;
-                    Debug.Log("HURRAY!");
+                    devisualizeTemptation();
                 }
             }
             else
@@ -71,7 +71,6 @@ public class temptingObject : MonoBehaviour
         } else if (loss)
         {
             player.GetComponent<PlayerController>().can_move = false;
-            devisualizeTemptation();
             Destroy(walkingOnSunshine);
             sunshinePlaying = false;
             hoveringText.rectTransform.anchoredPosition = new Vector3(0, 200, 0);

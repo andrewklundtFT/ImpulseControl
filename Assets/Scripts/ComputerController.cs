@@ -43,12 +43,18 @@ public class ComputerController : MonoBehaviour
 
     public void askToLogOn ()
     {
-        hoveringText.text = "'E' TO LOG ON";
+        if (!closeWindowController.win)
+        {
+            hoveringText.text = "'E' TO LOG ON";
+        }
     }
 
     public void stopAsking ()
     {
-        hoveringText.text = "";
+        if (Vector3.Distance(transform.position, player.transform.position) <= 3 && !closeWindowController.win)
+        {
+            hoveringText.text = "";
+        }
     }
 
 }

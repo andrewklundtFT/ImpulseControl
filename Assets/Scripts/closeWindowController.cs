@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class closeWindowController : MonoBehaviour
 {
-    public AudioSource sunshineSource;
-    private AudioSource walkingOnSunshine;
+    public static bool win = false;
     public TMPro.TextMeshProUGUI hoveringText;
 
     private void OnMouseOver()
@@ -14,10 +13,10 @@ public class closeWindowController : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0))
             {
-                walkingOnSunshine = Instantiate(sunshineSource, transform, true);
-                RenderSettings.ambientLight = Color.black;
+                RenderSettings.ambientLight = Color.green;
                 hoveringText.rectTransform.anchoredPosition = new Vector3(0, 200, 0);
                 hoveringText.text = "YOU WIN!! You didn't make any mistakes!!";
+                win = true;
                 Debug.Log("close");
             }
         }
