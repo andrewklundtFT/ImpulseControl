@@ -8,6 +8,7 @@ public class temptingObject : MonoBehaviour
     public GameObject player;
 
     public string actionName;
+    public string lossMessage;
     public AudioSource sunshineSource;
     public bool weirdObject = false;
     public float objectHeight;
@@ -40,7 +41,7 @@ public class temptingObject : MonoBehaviour
 
     private void Update()
     {
-        if (Vector3.Distance(transform.position, player.transform.position) <= 5 && !loss)
+        if (Vector3.Distance(transform.position, player.transform.position) <= 5 && !loss && !ComputerController.computerOpen)
         {
             devisualizeTemptation();
             if (!weirdObject)
@@ -73,6 +74,8 @@ public class temptingObject : MonoBehaviour
             devisualizeTemptation();
             Destroy(walkingOnSunshine);
             sunshinePlaying = false;
+            hoveringText.rectTransform.anchoredPosition = new Vector3(0, 200, 0);
+            hoveringText.text = lossMessage;
             RenderSettings.ambientLight = Color.red;
         }
     }
