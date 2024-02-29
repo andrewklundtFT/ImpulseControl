@@ -18,7 +18,7 @@ public class instructionsScript : MonoBehaviour
     {
         if (ComputerController.computerOpen)
         {
-            hoveringText.text = "In this game, you are going to work for your company. You must make decisions to avoid any cybersecurity threats. Pressing 'E' will allow you to interact with objects. Press 'E' to exit this guide!";
+            hoveringText.text = "TITLE SCREEN! IMPULSE CONTROL: In this game, you are going to work for your company. You must make decisions to avoid any cybersecurity threats. Pressing 'E' will allow you to interact with objects. Press 'E' to exit this guide!";
         }
         if (Input.GetKeyDown(KeyCode.E) && ComputerController.computerOpen)
         {
